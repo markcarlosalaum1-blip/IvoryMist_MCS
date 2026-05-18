@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import API from '../../services/api';
 import toast from 'react-hot-toast';
+import AdminLayout from '../../components/admin/AdminLayout';
 
-const StaffManagement = () => {
+const StaffManagementPage = () => {
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: '', username: '', password: '' });
@@ -50,37 +51,38 @@ const StaffManagement = () => {
   };
 
   return (
-    <>
+    <AdminLayout>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 
-        .staff-management-section {
-          width: 100%;
-          height: 100%;
+        .staff-wrapper {
           display: flex;
           flex-direction: column;
+          height: 100%;
+          width: 100%;
+          gap: 0;
         }
 
-        .staff-management-header {
-          margin-bottom: 32px;
+        .section-header {
+          margin-bottom: 28px;
           flex-shrink: 0;
         }
 
-        .staff-management-section h2 {
+        .section-header h1 {
           font-family: 'Playfair Display', serif;
-          font-size: 36px;
+          font-size: 48px;
           font-weight: 700;
           color: #00d4ff;
           letter-spacing: -0.5px;
           margin: 0 0 12px;
         }
 
-        .staff-management-section > p {
-          font-size: 15px;
+        .section-header p {
+          font-size: 16px;
           color: rgba(255,255,255,0.65);
+          letter-spacing: 0.02em;
           margin: 0;
           font-weight: 300;
-          letter-spacing: 0.02em;
         }
 
         .staff-grid {
@@ -109,7 +111,7 @@ const StaffManagement = () => {
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .staff-form h3 {
+        .staff-form h2 {
           font-family: 'Playfair Display', serif;
           margin: 0 0 28px;
           color: #00d4ff;
@@ -161,7 +163,6 @@ const StaffManagement = () => {
           box-shadow: 0 0 16px rgba(0, 212, 255, 0.25);
         }
 
-        /* Override browser autofill */
         input:-webkit-autofill,
         input:-webkit-autofill:focus,
         input:-webkit-autofill:hover {
@@ -202,30 +203,24 @@ const StaffManagement = () => {
           background: rgba(15, 64, 48, 0.6);
           backdrop-filter: blur(10px);
           border: 1.5px solid rgba(0, 212, 255, 0.3);
-          padding: 32px;
+          padding: 40px;
           border-radius: 20px;
-          overflow: auto;
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          min-height: 0;
+          overflow-x: auto;
         }
 
-        .staff-list h3 {
+        .staff-list h2 {
           font-family: 'Playfair Display', serif;
           color: #00d4ff;
           font-size: 24px;
           font-weight: 700;
           letter-spacing: -0.3px;
-          margin: 0 0 20px;
-          flex-shrink: 0;
+          margin: 0 0 28px;
         }
 
         .admin-table {
           width: 100%;
           min-width: 500px;
           border-collapse: collapse;
-          flex: 1;
         }
 
         .admin-table thead {
@@ -283,20 +278,6 @@ const StaffManagement = () => {
           letter-spacing: 0.02em;
         }
 
-        @media (max-width: 1200px) {
-          .staff-grid {
-            gap: 28px;
-          }
-
-          .staff-form {
-            padding: 28px;
-          }
-
-          .staff-list {
-            padding: 28px;
-          }
-        }
-
         @media (max-width: 1024px) {
           .staff-grid {
             grid-template-columns: 1fr;
@@ -308,7 +289,7 @@ const StaffManagement = () => {
             height: auto;
           }
 
-          .staff-management-section h2 {
+          .section-header h1 {
             font-size: 32px;
           }
           
@@ -322,26 +303,16 @@ const StaffManagement = () => {
         }
 
         @media (max-width: 768px) {
-          .staff-management-header {
-            margin-bottom: 24px;
-          }
-
-          .staff-management-section h2 {
+          .section-header h1 {
             font-size: 28px;
-            margin-bottom: 8px;
-          }
-
-          .staff-grid {
-            grid-template-columns: 1fr;
-            gap: 20px;
           }
 
           .staff-form {
-            padding: 20px;
+            padding: 28px;
           }
 
           .staff-list {
-            padding: 20px;
+            padding: 28px;
           }
 
           .admin-table th,
@@ -350,23 +321,19 @@ const StaffManagement = () => {
             font-size: 12px;
           }
 
-          .staff-list h3,
-          .staff-form h3 {
+          .staff-list h2,
+          .staff-form h2 {
             font-size: 20px;
             margin-bottom: 20px;
           }
         }
 
         @media (max-width: 480px) {
-          .staff-management-header {
-            margin-bottom: 28px;
-          }
-
-          .staff-management-section h2 {
+          .section-header h1 {
             font-size: 24px;
           }
 
-          .staff-management-section > p {
+          .section-header p {
             font-size: 13px;
           }
 
@@ -398,112 +365,112 @@ const StaffManagement = () => {
         }
       `}</style>
 
-      <div className="staff-management-section">
-        <div className="staff-management-header">
-          <h2>Staff Management</h2>
+      <div className="staff-wrapper">
+        <div className="section-header">
+          <h1>Staff Management</h1>
           <p>Add, edit, and manage your staff members</p>
         </div>
 
         <div className="staff-grid">
           <form className="staff-form" onSubmit={handleCreate}>
-            <h3>Add Staff</h3>
-            <div className="form-group">
-              <label>Full Name</label>
-              <input 
-                name="name" 
-                value={form.name} 
-                onChange={handleChange}
-                placeholder="John Doe"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Username</label>
-              <input 
-                name="username" 
-                value={form.username} 
-                onChange={handleChange}
-                type="text"
-                placeholder="johndoe"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Password</label>
-              <input 
-                name="password" 
-                value={form.password} 
-                onChange={handleChange}
-                type="password"
-                placeholder="••••••••"
-                required
-              />
-            </div>
-            <button className="btn-primary" type="submit">➕ Create Staff</button>
-          </form>
-
-          <div className="staff-list">
-            <h3>Existing Staff</h3>
-            {loading ? (
-              <p style={{color: 'rgba(255,255,255,0.6)', textAlign: 'center', padding: '40px 0', fontSize: '14px'}}>
-                Loading staff members...
-              </p>
-            ) : staff.length > 0 ? (
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Role</th>
-                    <th>Created</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {staff.map((s) => (
-                    <tr key={s.id}>
-                      <td style={{fontWeight: 600}}>{s.name}</td>
-                      <td>{s.username}</td>
-                      <td style={{color: 'rgba(0, 212, 255, 0.8)'}}>
-                        <span style={{
-                          display: 'inline-block',
-                          padding: '4px 12px',
-                          background: 'rgba(0, 212, 255, 0.1)',
-                          border: '1px solid rgba(0, 212, 255, 0.3)',
-                          borderRadius: '6px',
-                          fontSize: '11px',
-                          fontWeight: 600,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.05em'
-                        }}>
-                          {s.role || 'staff'}
-                        </span>
-                      </td>
-                      <td>{new Date(s.created_at).toLocaleDateString()}</td>
-                      <td>
-                        <button 
-                          className="btn-danger" 
-                          onClick={() => handleDelete(s.id)}
-                          type="button"
-                        >
-                          🗑️ Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <div className="empty-staff">
-                <p style={{fontSize: '16px', marginBottom: '8px'}}>No staff members yet</p>
-                <p style={{fontSize: '14px', opacity: 0.7}}>Use the form on the left to add your first staff member</p>
-              </div>
-            )}
+            <h2>Add Staff</h2>
+          <div className="form-group">
+            <label>Full Name</label>
+            <input 
+              name="name" 
+              value={form.name} 
+              onChange={handleChange}
+              placeholder="John Doe"
+              required
+            />
           </div>
+          <div className="form-group">
+            <label>Username</label>
+            <input 
+              name="username" 
+              value={form.username} 
+              onChange={handleChange}
+              type="text"
+              placeholder="johndoe"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Password</label>
+            <input 
+              name="password" 
+              value={form.password} 
+              onChange={handleChange}
+              type="password"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+          <button className="btn-primary" type="submit">➕ Create Staff</button>
+        </form>
+
+        <div className="staff-list">
+          <h2>Existing Staff</h2>
+          {loading ? (
+            <p style={{color: 'rgba(255,255,255,0.6)', textAlign: 'center', padding: '40px 0', fontSize: '14px'}}>
+              Loading staff members...
+            </p>
+          ) : staff.length > 0 ? (
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Username</th>
+                  <th>Role</th>
+                  <th>Created</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {staff.map((s) => (
+                  <tr key={s.id}>
+                    <td style={{fontWeight: 600}}>{s.name}</td>
+                    <td>{s.username}</td>
+                    <td style={{color: 'rgba(0, 212, 255, 0.8)'}}>
+                      <span style={{
+                        display: 'inline-block',
+                        padding: '4px 12px',
+                        background: 'rgba(0, 212, 255, 0.1)',
+                        border: '1px solid rgba(0, 212, 255, 0.3)',
+                        borderRadius: '6px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>
+                        {s.role || 'staff'}
+                      </span>
+                    </td>
+                    <td>{new Date(s.created_at).toLocaleDateString()}</td>
+                    <td>
+                      <button 
+                        className="btn-danger" 
+                        onClick={() => handleDelete(s.id)}
+                        type="button"
+                      >
+                        🗑️ Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="empty-staff">
+              <p style={{fontSize: '16px', marginBottom: '8px'}}>No staff members yet</p>
+              <p style={{fontSize: '14px', opacity: 0.7}}>Use the form on the left to add your first staff member</p>
+            </div>
+          )}
         </div>
       </div>
-    </>
+      </div>
+    </AdminLayout>
   );
 };
 
-export default StaffManagement;
+export default StaffManagementPage;

@@ -54,7 +54,7 @@ CREATE TABLE orders (
     table_number TEXT,
     address TEXT,
     landmark TEXT,
-    contact_number TEXT,
+    contact_number TEXT CHECK (contact_number IS NULL OR (contact_number ~ '^[0-9]{11}$')),
     total_amount DECIMAL(10, 2) NOT NULL,
     delivery_fee DECIMAL(10, 2) DEFAULT 0,
     notes TEXT,

@@ -15,6 +15,9 @@ const Checkout = lazy(() => import('./pages/customer/Checkout'));
 const TrackOrder = lazy(() => import('./pages/customer/TrackOrder'));
 const About = lazy(() => import('./pages/customer/About'));
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
+const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
+const ProductManagementPage = lazy(() => import('./pages/admin/ProductManagementPage'));
+const StaffManagementPage = lazy(() => import('./pages/admin/StaffManagementPage'));
 const DeliveryOrders = lazy(() => import('./pages/admin/DeliveryOrders'));
 const StaffDashboard = lazy(() => import('./pages/staff/StaffDashboard'));
 import Navbar from './components/common/Navbar';
@@ -39,7 +42,6 @@ const ProtectedRoute = ({ children, roles }) => {
 const CustomerRoute = ({ children }) => {
   const { user, loading } = React.useContext(AuthContext);
   if (loading) return <div>Loading...</div>;
-  // If logged-in user is admin or staff, redirect them away from customer pages
   if (user && ['admin', 'staff'].includes(user.role)) {
     if (user.role === 'admin') return <Navigate to="/admin" />;
     if (user.role === 'staff') return <Navigate to="/staff" />;
@@ -53,74 +55,126 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <Router>
-          <style>{`
-            @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+            <style>{`
+              @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 
-            :root { --bg-root: #0a0806; --bg-panel: #0f0c09; --gold: #e8c97a; --muted-gold: rgba(232,201,122,0.7); }
+              :root { 
+                --bg-root: #050816; 
+                --bg-panel: #1E1B4B; 
+                --neon-purple: #A855F7;
+                --neon-blue: #3B82F6;
+                --neon-cyan: #22D3EE;
+                --neon-pink: #D946EF;
+              }
 
-            .container {
-              max-width: 1200px;
-              margin: 24px auto;
-              padding: 0 20px;
-              box-sizing: border-box;
-            }
+              * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+              }
 
-            body { background: linear-gradient(180deg, var(--bg-root), var(--bg-panel)); color: rgba(255,255,255,0.9); font-family: 'DM Sans', sans-serif; }
+              .container {
+                max-width: 1200px;
+                margin: 24px auto;
+                padding: 0 20px;
+                box-sizing: border-box;
+              }
 
-            /* small helpers used across pages */
-            .btn-primary { padding: 8px 12px; background: linear-gradient(135deg,var(--gold),#f0d88e); border-radius:8px; border:none; color:#0f0c09; cursor:pointer }
-            .btn-danger { padding:8px 12px; background: rgba(255,107,107,0.12); border-radius:8px; border:0.5px solid rgba(255,107,107,0.18); color:#ff6b6b }
-          `}</style>
-          <Navbar />
-          <div className="container">
+              body { 
+                background: 
+                  radial-gradient(ellipse 1200px 800px at 20% 30%, rgba(168,85,247,0.08) 0%, transparent 50%),
+                  radial-gradient(ellipse 1400px 900px at 80% 70%, rgba(34,211,238,0.06) 0%, transparent 50%),
+                  linear-gradient(135deg, #050816 0%, #0A1026 20%, #1E1B4B 40%, #071B34 60%, #0A1026 80%, #050816 100%);
+                color: rgba(255,255,255,0.95); 
+                font-family: 'Sora', 'Poppins', sans-serif;
+                min-height: 100vh;
+                background-attachment: fixed;
+              }
+
+              body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: 
+                  radial-gradient(circle at 50% 0%, rgba(168,85,247,0.05) 0%, transparent 40%),
+                  radial-gradient(circle at 0% 50%, rgba(34,211,238,0.03) 0%, transparent 50%),
+                  radial-gradient(circle at 100% 100%, rgba(217,70,239,0.04) 0%, transparent 50%);
+                pointer-events: none;
+                z-index: 0;
+              }
+
+              #root {
+                position: relative;
+                z-index: 1;
+              }
+
+              .btn-primary { 
+                padding: 10px 16px; 
+                background: linear-gradient(135deg, #A855F7, #3B82F6); 
+                border-radius: 10px; 
+                border: 1.5px solid rgba(168,85,247,0.4);
+                color: #FFFFFF; 
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                box-shadow: 0 6px 20px rgba(168,85,247,0.25);
+              }
+
+              .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(168,85,247,0.4), 0 0 25px rgba(34,211,238,0.2);
+              }
+
+              .btn-danger { 
+                padding: 10px 16px; 
+                background: rgba(217,70,239,0.12); 
+                border-radius: 10px; 
+                border: 1.5px solid rgba(217,70,239,0.3); 
+                color: #D946EF;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+              }
+
+              .btn-danger:hover {
+                background: rgba(217,70,239,0.2);
+                border-color: rgba(217,70,239,0.6);
+                box-shadow: 0 6px 20px rgba(217,70,239,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+              }
+            `}</style>
+            <Navbar />
             <Suspense fallback={<Loading />}>
               <Routes>
-              {/* Customer Routes */}
-              <Route path="/" element={<CustomerRoute><Home /></CustomerRoute>} />
-              <Route path="/menu" element={<CustomerRoute><Menu /></CustomerRoute>} />
-              <Route path="/about" element={<CustomerRoute><About /></CustomerRoute>} />
-              <Route path="/cart" element={<CustomerRoute><Cart /></CustomerRoute>} />
-              <Route path="/checkout" element={<CustomerRoute><Checkout /></CustomerRoute>} />
-              <Route path="/track" element={<CustomerRoute><TrackOrder /></CustomerRoute>} />
-              <Route path="/track/:orderNumber" element={<CustomerRoute><TrackOrder /></CustomerRoute>} />
-              
-              {/* Auth Routes */}
-              <Route path="/login" element={<Login />} />
+                {/* Customer Routes */}
+                <Route path="/" element={<CustomerRoute><div className="container"><Home /></div></CustomerRoute>} />
+                <Route path="/menu" element={<CustomerRoute><div className="container"><Menu /></div></CustomerRoute>} />
+                <Route path="/about" element={<CustomerRoute><div className="container"><About /></div></CustomerRoute>} />
+                <Route path="/cart" element={<CustomerRoute><div className="container"><Cart /></div></CustomerRoute>} />
+                <Route path="/checkout" element={<CustomerRoute><div className="container"><Checkout /></div></CustomerRoute>} />
+                <Route path="/track" element={<CustomerRoute><div className="container"><TrackOrder /></div></CustomerRoute>} />
+                <Route path="/track/:orderNumber" element={<CustomerRoute><div className="container"><TrackOrder /></div></CustomerRoute>} />
 
-              {/* Admin Routes */}
-              <Route 
-                path="/admin/*" 
-                element={
-                  <ProtectedRoute roles={['admin']}>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route
-                path="/admin/deliveries"
-                element={
-                  <ProtectedRoute roles={['admin']}>
-                    <DeliveryOrders />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Auth Routes */}
+                <Route path="/login" element={<Login />} />
 
-              {/* Staff Routes */}
-              <Route 
-                path="/staff/*" 
-                element={
-                  <ProtectedRoute roles={['staff', 'admin']}>
-                    <StaffDashboard />
-                  </ProtectedRoute>
-                } 
-              />
-            </Routes>
+                {/* Admin Routes - no container */}
+                <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboardPage /></ProtectedRoute>} />
+                <Route path="/admin/dashboard" element={<ProtectedRoute roles={['admin']}><AdminDashboardPage /></ProtectedRoute>} />
+                <Route path="/admin/products" element={<ProtectedRoute roles={['admin']}><ProductManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/staff" element={<ProtectedRoute roles={['admin']}><StaffManagementPage /></ProtectedRoute>} />
+                <Route path="/admin/deliveries" element={<ProtectedRoute roles={['admin']}><DeliveryOrders /></ProtectedRoute>} />
+
+                {/* Staff Routes - no container */}
+                <Route path="/staff/*" element={<ProtectedRoute roles={['staff', 'admin']}><StaffDashboard /></ProtectedRoute>} />
+              </Routes>
             </Suspense>
-          </div>
-          <Toaster position="top-right" />
-        </Router>
-      </CartProvider>
-    </AuthProvider>
+            <Toaster position="top-right" />
+          </Router>
+        </CartProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

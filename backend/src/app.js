@@ -21,24 +21,24 @@ app.use(compression());
 app.use(helmet());
 
 // CORS configuration
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim())
-  : ['http://localhost:5173', 'http://localhost:3000', 'https://cafe-ordering-system-project.vercel.app'];
+const allowedOrigins = process.env.ALLOWED_ORIGINS ?
+    process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim()) :
+    ['http://localhost:5173', 'http://localhost:3000', 'https://cafe-ordering-system-project.vercel.app'];
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    // allow requests with no origin (like mobile apps, curl, server-to-server)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      return callback(null, true);
-    } else {
-      return callback(new Error('CORS policy: Origin not allowed'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With'],
-  credentials: false,
-  optionsSuccessStatus: 204,
+    origin: function(origin, callback) {
+        // allow requests with no origin (like mobile apps, curl, server-to-server)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            return callback(null, true);
+        } else {
+            return callback(new Error('CORS policy: Origin not allowed'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With'],
+    credentials: false,
+    optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
@@ -49,18 +49,19 @@ app.use('/api/', apiLimiter);
 // Apply stricter rate limiting to auth routes
 app.use('/api/auth/login', authLimiter);
 
-app.use(express.json({ limit: '10kb' })); // Limit body size for security
+app.use(express.json({ limit: '50mb' })); // Increased limit to handle file uploads
+app.use(express.urlencoded({ limit: '50mb', extended: true })); // Handle form-encoded data
 
 // Backward compatibility - redirect /api/* to /api/v1/*
 // Skip rewrite when the path already starts with /v1 to avoid duplicating /v1 (e.g. /api/v1/...)
 app.use('/api', (req, res, next) => {
-  // req.path is the path relative to the mount point ('/api')
-  if (req.path && req.path.startsWith('/v1')) {
-    return next();
-  }
-  const newPath = `/api/v1${req.path}`;
-  req.url = newPath;
-  next();
+    // req.path is the path relative to the mount point ('/api')
+    if (req.path && req.path.startsWith('/v1')) {
+        return next();
+    }
+    const newPath = `/api/v1${req.path}`;
+    req.url = newPath;
+    next();
 });
 
 // API Version 1 Routes
@@ -79,12 +80,12 @@ app.use('/api/v1/debug', debugRoutes);
 
 // API Documentation endpoint
 app.get('/api/docs', (req, res) => {
-  res.sendFile(path.join(__dirname, 'docs', 'openapi.yaml'));
+    res.sendFile(path.join(__dirname, 'docs', 'openapi.yaml'));
 });
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // Error Handling Middleware
