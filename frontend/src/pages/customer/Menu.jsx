@@ -199,6 +199,80 @@ const Menu = () => {
           align-items: center;
         }
 
+        .stock-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 14px;
+          background: linear-gradient(135deg, rgba(0,212,255,0.15) 0%, rgba(16,185,129,0.1) 100%);
+          border: 1px solid rgba(0,212,255,0.4);
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.03em;
+          color: #00d4ff;
+          box-shadow: 
+            0 0 12px rgba(0,212,255,0.3),
+            inset 0 1px 2px rgba(255,255,255,0.1);
+          transition: all 0.3s ease;
+          white-space: nowrap;
+          margin-bottom: 8px;
+        }
+
+        .stock-badge:hover {
+          background: linear-gradient(135deg, rgba(0,212,255,0.25) 0%, rgba(16,185,129,0.15) 100%);
+          border-color: rgba(0,212,255,0.6);
+          box-shadow: 
+            0 0 18px rgba(0,212,255,0.5),
+            inset 0 1px 2px rgba(255,255,255,0.15);
+          transform: scale(1.02);
+        }
+
+        .stock-badge.low-stock {
+          color: #ff6b6b;
+          border-color: rgba(255,107,107,0.4);
+          background: linear-gradient(135deg, rgba(255,107,107,0.15) 0%, rgba(255,107,107,0.08) 100%);
+          box-shadow: 
+            0 0 12px rgba(255,107,107,0.3),
+            inset 0 1px 2px rgba(255,255,255,0.1);
+        }
+
+        .stock-badge.low-stock:hover {
+          border-color: rgba(255,107,107,0.6);
+          box-shadow: 
+            0 0 18px rgba(255,107,107,0.5),
+            inset 0 1px 2px rgba(255,255,255,0.15);
+        }
+
+        .stock-badge.out-of-stock {
+          color: rgba(255,255,255,0.5);
+          border-color: rgba(255,255,255,0.2);
+          background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%);
+          box-shadow: 
+            0 0 8px rgba(255,255,255,0.15),
+            inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .stock-icon {
+          display: inline-flex;
+          width: 14px;
+          height: 14px;
+          align-items: center;
+          justify-content: center;
+          animation: stock-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes stock-pulse {
+          0%, 100% { 
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% { 
+            opacity: 0.7;
+            transform: scale(1.1);
+          }
+        }
+
         .price {
           font-weight: 700;
           color: #00d4ff;
@@ -280,6 +354,12 @@ const Menu = () => {
             font-size: 16px;
           }
 
+          .stock-badge {
+            padding: 6px 12px;
+            font-size: 11px;
+            margin-bottom: 8px;
+          }
+
           .btn-add {
             padding: 9px 12px;
             font-size: 12px;
@@ -298,6 +378,12 @@ const Menu = () => {
 
           .menu-content h1 {
             font-size: 28px;
+          }
+
+          .stock-badge {
+            padding: 5px 10px;
+            font-size: 10px;
+            margin-bottom: 6px;
           }
 
           .product-footer {
@@ -329,14 +415,21 @@ const Menu = () => {
                 <div className="product-info">
                   <h3>{product.name}</h3>
                   <p>{product.description}</p>
+                  {/* Stock Badge */}
+                  <div className={`stock-badge ${product.stock <= 5 && product.stock > 0 ? 'low-stock' : product.stock === 0 ? 'out-of-stock' : ''}`}>
+                    <span className="stock-icon">📦</span>
+                    <span>
+                      {product.stock > 0 ? `Available: ${product.stock} pcs` : 'Out of Stock'}
+                    </span>
+                  </div>
                   <div className="product-footer">
                     <span className="price">{formatCurrencyPHP(product.price)}</span>
                     <button 
                       onClick={() => handleAddToCart(product)}
                       className="btn-add"
-                      disabled={product.status === 'out_of_stock'}
+                      disabled={product.status === 'out_of_stock' || product.stock === 0}
                     >
-                      {product.status === 'out_of_stock' ? 'Out' : 'Add'}
+                      {product.status === 'out_of_stock' || product.stock === 0 ? 'Out' : 'Add'}
                     </button>
                   </div>
                 </div>
