@@ -1,6 +1,15 @@
 [build]
+  # Install dependencies in the `frontend` package and build the Vite app
   command = "npm --prefix frontend install && npm --prefix frontend run build"
+  # Build output directory for Netlify
   publish = "frontend/dist"
+
+[build.environment]
+  # Use a supported Node version on Netlify (adjust if needed)
+  NODE_VERSION = "18"
+  # Set your frontend API base URL for production (override on Netlify UI)
+  # Replace the placeholder below with your real backend URL or set it in Netlify site settings
+  VITE_API_URL = "https://api.example.com"
 
 [[redirects]]
   from = "/*"
