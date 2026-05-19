@@ -1,0 +1,282 @@
+/* ============================================
+   FEATURE CARDS SECTION
+   ============================================ */
+
+.feature-section {
+    position: relative;
+    width: 100%;
+    padding: 100px 60px;
+    background: linear-gradient(to bottom, rgba(10, 10, 26, 0), rgba(10, 10, 26, 0.5));
+    z-index: 5;
+}
+
+.features-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    position: relative;
+    z-index: 2;
+}
+
+
+/* ============================================
+   INDIVIDUAL FEATURE CARDS
+   ============================================ */
+
+.feature-card {
+    position: relative;
+    padding: 40px 24px;
+    background: rgba(157, 78, 221, 0.08);
+    border: 1px solid rgba(224, 168, 255, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(157, 78, 221, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.feature-card:hover {
+    background: rgba(157, 78, 221, 0.15);
+    border-color: rgba(224, 168, 255, 0.4);
+    box-shadow: 0 16px 40px rgba(157, 78, 221, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 30px rgba(224, 168, 255, 0.2);
+    transform: translateY(-8px);
+}
+
+.feature-card:hover .feature-glow {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.feature-card:hover .icon-glow {
+    opacity: 1;
+    animation: icon-pulse 0.6s ease-out;
+}
+
+.feature-card:hover .card-border-glow {
+    opacity: 1;
+}
+
+
+/* Glow Background Effect */
+
+.feature-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(224, 168, 255, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0;
+    transition: all 0.4s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+/* Card Content */
+
+.feature-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+
+/* ============================================
+   FEATURE ICON
+   ============================================ */
+
+.feature-icon {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(224, 168, 255, 0.15), rgba(157, 78, 221, 0.1));
+    border: 2px solid rgba(224, 168, 255, 0.3);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(224, 168, 255, 0.2), inset 0 0 15px rgba(224, 168, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    border-color: #e0a8ff;
+    box-shadow: 0 0 30px rgba(224, 168, 255, 0.4), inset 0 0 20px rgba(224, 168, 255, 0.2), 0 0 20px rgba(224, 168, 255, 0.3);
+}
+
+.icon-glow {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(224, 168, 255, 0.5) 0%, transparent 70%);
+    opacity: 0;
+    filter: blur(10px);
+    z-index: -1;
+}
+
+@keyframes icon-pulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+.icon-emoji {
+    font-size: 40px;
+    line-height: 1;
+    display: block;
+    filter: drop-shadow(0 0 10px rgba(224, 168, 255, 0.3));
+}
+
+
+/* ============================================
+   FEATURE TEXT
+   ============================================ */
+
+.feature-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-title {
+    color: #e0a8ff;
+    text-shadow: 0 0 15px rgba(224, 168, 255, 0.4);
+}
+
+.feature-description {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #b0b0b0;
+    font-weight: 300;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-description {
+    color: #d0d0d0;
+}
+
+
+/* ============================================
+   CARD BORDER GLOW
+   ============================================ */
+
+.card-border-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(224, 168, 255, 0.4) 0%, rgba(224, 168, 255, 0) 50%, rgba(157, 78, 221, 0.3) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    border: 1px solid rgba(224, 168, 255, 0.5);
+    z-index: 1;
+}
+
+
+/* ============================================
+   DIVIDER
+   ============================================ */
+
+.features-divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e0a8ff, transparent);
+    box-shadow: 0 0 15px rgba(224, 168, 255, 0.5);
+    margin: 60px auto 0;
+    position: relative;
+    z-index: 2;
+}
+
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+    .feature-section {
+        padding: 80px 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .feature-section {
+        padding: 60px 24px;
+    }
+    .feature-card {
+        padding: 32px 20px;
+    }
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+    }
+    .icon-emoji {
+        font-size: 32px;
+    }
+    .feature-title {
+        font-size: 15px;
+    }
+    .feature-description {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .feature-section {
+        padding: 40px 16px;
+    }
+    .feature-card {
+        padding: 24px 16px;
+    }
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+    }
+    .icon-emoji {
+        font-size: 28px;
+    }
+    .feature-title {
+        font-size: 14px;
+    }
+    .feature-description {
+        font-size: 11px;
+    }
+    .feature-glow {
+        width: 200px;
+        height: 200px;
+    }
+}

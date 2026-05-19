@@ -7,28 +7,28 @@ This document outlines all required environment variables for deploying IvoryMis
 All these variables must be set in Render's Environment section:
 
 ### Database (Supabase)
+
 - `SUPABASE_URL`: Your Supabase project URL
   - Format: `https://xxxxx.supabase.co`
   - Get from: Supabase Dashboard → Settings → API
-  
 - `SUPABASE_ANON_KEY`: Supabase anonymous/public key
   - Get from: Supabase Dashboard → Settings → API → anon key
   - Used by: Frontend for RLS-protected queries
-  
 - `SUPABASE_SERVICE_ROLE_KEY`: Supabase service role key (privileged)
   - Get from: Supabase Dashboard → Settings → API → service_role key
   - Used by: Backend for admin operations bypassing RLS
 
 ### Server Configuration
+
 - `PORT`: Server port (default: 5000)
   - Render sets this automatically, usually no need to change
-  
 - `ALLOWED_ORIGINS`: CORS-allowed origins (optional, uses defaults if not set)
   - Format: Comma-separated list
   - Example: `https://ivorymisterderingcafe.netlify.app,https://ivorymistorderingcafes.netlify.app`
   - Defaults to: localhost variants + both Netlify domains + Vercel
 
 ### Backend Server URL (for Client/Frontend)
+
 - `RENDER_URL`: Your Render deployment URL (for reference/documentation)
   - Example: `https://ivorymist-mcs.onrender.com`
   - This is your backend API URL
@@ -36,6 +36,7 @@ All these variables must be set in Render's Environment section:
 ## Frontend (Netlify)
 
 ### API Configuration
+
 - `VITE_API_URL`: Backend API URL (optional, uses defaults if not set)
   - Format: `https://your-backend-url/api/v1`
   - Example: `https://ivorymist-mcs.onrender.com/api/v1`
@@ -90,23 +91,26 @@ Your Supabase credentials (SUPABASE_URL, keys) are what you configure above.
 ## Troubleshooting
 
 ### "500 Internal Server Error" on Backend
+
 - Check: Are SUPABASE_URL and keys set on Render?
 - Check: Run `curl https://ivorymist-mcs.onrender.com/api/v1/health`
 - Check: Render deploy logs for error messages
 
 ### "CORS policy" error on Frontend
+
 - Check: Are CORS origins configured correctly?
 - Check: Is backend origin in `ALLOWED_ORIGINS`?
 - Check: Is CORS middleware enabled in backend?
 
 ### Frontend shows "Loading..." forever
+
 - Check: Is `VITE_API_URL` configured correctly on Netlify?
 - Check: Can frontend reach backend? Test in browser console
 - Check: Are there 401 errors in browser console?
 
 ### Products not loading from menu
+
 - Check: Are Supabase credentials correct?
 - Check: Does the `products` table exist in Supabase?
 - Check: Does it have data?
 - Run: `SELECT * FROM products;` in Supabase SQL editor
-

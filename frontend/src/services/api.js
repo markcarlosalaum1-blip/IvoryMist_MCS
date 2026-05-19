@@ -2,19 +2,24 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 // Use environment variable or detect dev/prod automatically
-let API_URL = import.meta.env.VITE_API_URL;
+let API_URL =
+    import.meta.env.VITE_API_URL;
 if (!API_URL) {
-  // For local development (localhost:3000, localhost:3001, etc.)
-  if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
-    API_URL = "http://localhost:5000/api/v1";
-  } else {
-    // Production
-    API_URL = "https://ivorymist-mcs.onrender.com/api/v1";
-  }
+    // For local development (localhost:3000, localhost:3001, etc.)
+    if (
+        typeof window !== "undefined" &&
+        (window.location.hostname === "localhost" ||
+            window.location.hostname === "127.0.0.1")
+    ) {
+        API_URL = "http://localhost:5000/api/v1";
+    } else {
+        // Production
+        API_URL = "https://ivorymist-mcs.onrender.com/api/v1";
+    }
 }
 console.log("🔗 API Base URL:", API_URL);
 const API = axios.create({
-  baseURL: API_URL,
+    baseURL: API_URL,
 });
 
 API.interceptors.request.use((config) => {

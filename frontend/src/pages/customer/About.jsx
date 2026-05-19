@@ -486,9 +486,6 @@ const About = () => {
               <p className="hero-subtitle">
                 Where elegance meets convenience. IvoryMist transforms your café experience into an art form, blending premium craftsmanship with seamless digital innovation. Every order tells a story of refined taste and effortless luxury.
               </p>
-              <div className="cta-button-container">
-                <Link to="/menu" className="btn-browse">Explore Menu</Link>
-              </div>
             </div>
             <div className="hero-visual">
               <div className="hero-text-badge">Elegance in Every Moment</div>

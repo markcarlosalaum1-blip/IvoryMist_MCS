@@ -1,16 +1,16 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const compression = require('compression');
-const path = require('path');
-const authRoutes = require('./routes/authRoutes');
-const debugRoutes = require('./routes/debugRoutes');
-const productRoutes = require('./routes/productRoutes');
-const orderRoutes = require('./routes/orderRoutes');
-const staffRoutes = require('./routes/staffRoutes');
-const reportRoutes = require('./routes/reportRoutes');
-const { errorMiddleware } = require('./middleware/errorMiddleware');
-const { authLimiter, apiLimiter } = require('./middleware/rateLimiter');
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const compression = require("compression");
+const path = require("path");
+const authRoutes = require("./routes/authRoutes");
+const debugRoutes = require("./routes/debugRoutes");
+const productRoutes = require("./routes/productRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const staffRoutes = require("./routes/staffRoutes");
+const reportRoutes = require("./routes/reportRoutes");
+const { errorMiddleware } = require("./middleware/errorMiddleware");
+const { authLimiter, apiLimiter } = require("./middleware/rateLimiter");
 
 const app = express();
 
@@ -22,29 +22,45 @@ app.use(helmet());
 
 // CORS configuration
 const allowedOrigins = process.env.ALLOWED_ORIGINS ?
-    process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim()) : ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:5000', 'https://ivorymisterderingcafe.netlify.app', 'https://ivorymistorderingcafes.netlify.app', 'https://cafe-ordering-system-project.vercel.app'];
+    process.env.ALLOWED_ORIGINS.split(",").map((s) => s.trim()) :
+    [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://localhost:3002",
+        "http://localhost:3003",
+        "http://localhost:5000",
+        "https://ivorymisterderingcafe.netlify.app",
+        "https://ivorymistorderingcafes.netlify.app",
+        "https://cafe-ordering-system-project.vercel.app",
+    ];
 
 const corsOptions = {
     origin: function(origin, callback) {
         // allow requests with no origin (like mobile apps, curl, server-to-server)
         if (!origin) return callback(null, true);
         // Allow any localhost origin for development
-        if (origin.startsWith('http://localhost:')) {
+        if (origin.startsWith("http://localhost:")) {
             return callback(null, true);
         }
         // Allow any netlify.app origin for development/testing
-        if (origin.includes('netlify.app')) {
+        if (origin.includes("netlify.app")) {
             return callback(null, true);
         }
         // Check against allowed origins for production
         if (allowedOrigins.indexOf(origin) !== -1) {
             return callback(null, true);
         } else {
-            return callback(new Error('CORS policy: Origin not allowed'));
+            return callback(new Error("CORS policy: Origin not allowed"));
         }
     },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With'],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "Accept",
+        "X-Requested-With",
+    ],
     credentials: false,
     optionsSuccessStatus: 204,
 };
@@ -52,19 +68,19 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // General rate limiter for all API routes
-app.use('/api/', apiLimiter);
+app.use("/api/", apiLimiter);
 
 // Apply stricter rate limiting to auth routes
-app.use('/api/auth/login', authLimiter);
+app.use("/api/auth/login", authLimiter);
 
-app.use(express.json({ limit: '50mb' })); // Increased limit to handle file uploads
-app.use(express.urlencoded({ limit: '50mb', extended: true })); // Handle form-encoded data
+app.use(express.json({ limit: "50mb" })); // Increased limit to handle file uploads
+app.use(express.urlencoded({ limit: "50mb", extended: true })); // Handle form-encoded data
 
 // Backward compatibility - redirect /api/* to /api/v1/*
 // Skip rewrite when the path already starts with /v1 to avoid duplicating /v1 (e.g. /api/v1/...)
-app.use('/api', (req, res, next) => {
+app.use("/api", (req, res, next) => {
     // req.path is the path relative to the mount point ('/api')
-    if (req.path && req.path.startsWith('/v1')) {
+    if (req.path && req.path.startsWith("/v1")) {
         return next();
     }
     const newPath = `/api/v1${req.path}`;
@@ -73,27 +89,27 @@ app.use('/api', (req, res, next) => {
 });
 
 // API Version 1 Routes
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/products', productRoutes);
-app.use('/api/v1/orders', orderRoutes);
-app.use('/api/v1/staff', staffRoutes);
-app.use('/api/v1/reports', reportRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/orders", orderRoutes);
+app.use("/api/v1/staff", staffRoutes);
+app.use("/api/v1/reports", reportRoutes);
 
 // Debug routes (connectivity checks)
 // Mount debug routes under both /api/debug and /api/v1/debug so they remain
 // accessible after the /api -> /api/v1 rewrite. These are intended for
 // operational checks only and can be removed in production.
-app.use('/api/debug', debugRoutes);
-app.use('/api/v1/debug', debugRoutes);
+app.use("/api/debug", debugRoutes);
+app.use("/api/v1/debug", debugRoutes);
 
 // API Documentation endpoint
-app.get('/api/docs', (req, res) => {
-    res.sendFile(path.join(__dirname, 'docs', 'openapi.yaml'));
+app.get("/api/docs", (req, res) => {
+    res.sendFile(path.join(__dirname, "docs", "openapi.yaml"));
 });
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get("/api/health", (req, res) => {
+    res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
 // Error Handling Middleware
