@@ -5,7 +5,7 @@ import { queryClient } from './lib/queryClient';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { Toaster } from 'react-hot-toast';
-import Navbar from './components/landing/Navbar';
+import Navbar from './components/common/Navbar';
 
 // Lazy load pages for better performance
 const Login = lazy(() => import('./pages/auth/Login'));

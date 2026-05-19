@@ -1,5 +1,5 @@
 import React from 'react';
-import HeroSection from '../../components/landing/HeroSection';
+import { HeroSection } from './landing';
 import Menu from './Menu';
 
 // Home page with luxury hero section and menu
