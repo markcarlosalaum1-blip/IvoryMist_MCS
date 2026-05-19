@@ -5,6 +5,7 @@ import { queryClient } from './lib/queryClient';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { Toaster } from 'react-hot-toast';
+import Navbar from './components/landing/Navbar';
 
 // Lazy load pages for better performance
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -20,7 +21,7 @@ const ProductManagementPage = lazy(() => import('./pages/admin/ProductManagement
 const StaffManagementPage = lazy(() => import('./pages/admin/StaffManagementPage'));
 const DeliveryOrders = lazy(() => import('./pages/admin/DeliveryOrders'));
 const StaffDashboard = lazy(() => import('./pages/staff/StaffDashboard'));
-import Navbar from './components/common/Navbar';
+// import Navbar from './components/common/Navbar'; // HeroSection includes Navbar
 
 // Loading fallback component
 const Loading = () => (
@@ -145,11 +146,12 @@ function App() {
                 box-shadow: 0 6px 20px rgba(217,70,239,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
               }
             `}</style>
+            {/* Navbar shows on all pages */}
             <Navbar />
             <Suspense fallback={<Loading />}>
               <Routes>
                 {/* Customer Routes */}
-                <Route path="/" element={<CustomerRoute><div className="container"><Home /></div></CustomerRoute>} />
+                <Route path="/" element={<Home />} />
                 <Route path="/menu" element={<CustomerRoute><div className="container"><Menu /></div></CustomerRoute>} />
                 <Route path="/about" element={<CustomerRoute><div className="container"><About /></div></CustomerRoute>} />
                 <Route path="/cart" element={<CustomerRoute><div className="container"><Cart /></div></CustomerRoute>} />
